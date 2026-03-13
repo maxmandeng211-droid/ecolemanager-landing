@@ -1,0 +1,237 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+#lw{position:relative;width:100%;min-height:680px;overflow:hidden;background:#070d0a;font-family:'Lato',sans-serif;display:flex;align-items:center;justify-content:center}
+canvas#sc{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.bg-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,120,40,0.13) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.card{position:relative;z-index:10;width:380px;background:rgba(5,20,10,0.82);border:1px solid rgba(0,200,80,0.25);border-radius:20px;padding:44px 40px 40px;backdrop-filter:blur(18px);box-shadow:0 0 60px rgba(0,160,60,0.12),0 0 0 1px rgba(255,200,0,0.07)}
+.logo-ring{width:72px;height:72px;border-radius:50%;border:2px solid rgba(255,200,0,0.6);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;position:relative}
+.logo-ring::before{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(0,200,80,0.3)}
+.star-logo{font-size:28px;filter:drop-shadow(0 0 8px rgba(255,200,0,0.8))}
+.brand{font-family:'Cinzel',serif;font-size:20px;font-weight:700;text-align:center;margin-bottom:4px;background:linear-gradient(135deg,#f7c200,#ffe566,#f7c200);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px}
+.subtitle{font-size:11px;color:rgba(0,200,80,0.7);text-align:center;letter-spacing:3px;text-transform:uppercase;margin-bottom:32px}
+.divider{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,200,0,0.3),transparent)}
+.divider-flag{display:flex;gap:3px}
+.flag-strip{width:10px;height:10px;border-radius:1px}
+.field-wrap{margin-bottom:18px;position:relative}
+label{display:block;font-size:11px;color:rgba(0,200,80,0.8);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+input[type=text],input[type=password]{width:100%;background:rgba(0,255,100,0.04);border:1px solid rgba(0,200,80,0.2);border-radius:10px;padding:13px 16px;color:#e8ffe8;font-size:14px;font-family:'Lato',sans-serif;outline:none;transition:border-color 0.3s,box-shadow 0.3s}
+input:focus{border-color:rgba(0,200,80,0.6);box-shadow:0 0 0 3px rgba(0,200,80,0.08),inset 0 0 20px rgba(0,200,80,0.03)}
+.role-row{display:flex;gap:8px;margin-bottom:20px}
+.role-btn{flex:1;padding:9px 4px;border-radius:8px;border:1px solid rgba(0,200,80,0.15);background:rgba(0,200,80,0.04);color:rgba(200,255,200,0.6);font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-family:'Lato',sans-serif}
+.role-btn.active,.role-btn:hover{border-color:rgba(255,200,0,0.5);background:rgba(255,200,0,0.08);color:#f7c200}
+.login-btn{width:100%;padding:15px;border-radius:12px;border:none;background:linear-gradient(135deg,#007a2f,#00a844,#007a2f);color:#fff;font-size:14px;font-family:'Cinzel',serif;letter-spacing:2px;cursor:pointer;position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s}
+.login-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(255,255,255,0.1),transparent);transform:translateX(-100%);transition:transform 0.5s}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,168,68,0.4)}
+.login-btn:hover::before{transform:translateX(100%)}
+.login-btn:active{transform:translateY(0)}
+.footer-note{text-align:center;margin-top:18px;font-size:11px;color:rgba(0,200,80,0.35);letter-spacing:1px}
+.msg{min-height:18px;font-size:11px;text-align:center;margin-top:12px;letter-spacing:1px;transition:opacity 0.3s}
+</style>
+
+<div id="lw">
+  <canvas id="sc"></canvas>
+  <div class="bg-glow"></div>
+  <div class="card">
+    <div class="logo-ring"><span class="star-logo">★</span></div>
+    <div class="brand">ÉcoleManager</div>
+    <div class="subtitle">Cameroun · Système Scolaire</div>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-flag">
+        <div class="flag-strip" style="background:#007a2f"></div>
+        <div class="flag-strip" style="background:#ce1126"></div>
+        <div class="flag-strip" style="background:#fcd116"></div>
+      </div>
+      <div class="divider-line"></div>
+    </div>
+    <div class="field-wrap">
+      <label>Identifiant</label>
+      <input type="text" id="usr" placeholder="Votre nom d'utilisateur" autocomplete="off">
+    </div>
+    <div class="field-wrap">
+      <label>Mot de passe</label>
+      <input type="password" id="pwd" placeholder="••••••••">
+    </div>
+    <div style="margin-bottom:20px">
+      <label style="margin-bottom:8px">Rôle</label>
+      <div class="role-row">
+        <button class="role-btn active" onclick="setRole(this)">Admin</button>
+        <button class="role-btn" onclick="setRole(this)">Professeur</button>
+        <button class="role-btn" onclick="setRole(this)">Économe</button>
+      </div>
+    </div>
+    <button class="login-btn" onclick="doLogin()">CONNEXION</button>
+    <div class="msg" id="msg"></div>
+    <div class="footer-note">Système de gestion scolaire · v2.0</div>
+  </div>
+</div>
+
+<script>
+(function(){
+const canvas=document.getElementById('sc');
+const ctx=canvas.getContext('2d');
+const lw=document.getElementById('lw');
+let W,H,mouse={x:null,y:null},stars=[];
+
+const CMR_COLS=['rgba(0,122,47,','rgba(206,17,38,','rgba(252,209,22,'];
+const GOLD='rgba(252,209,22,';
+const GREEN='rgba(0,168,68,';
+
+function resize(){
+  W=lw.offsetWidth;H=lw.offsetHeight;
+  canvas.width=W;canvas.height=H;
+  createStars();
+}
+
+function createStars(){
+  stars=[];
+  const n=Math.floor(W*H/3000)+40;
+  for(let i=0;i<n;i++){
+    const col=CMR_COLS[Math.floor(Math.random()*CMR_COLS.length)];
+    stars.push({
+      x:Math.random()*W,y:Math.random()*H,
+      ox:Math.random()*W,oy:Math.random()*H,
+      vx:0,vy:0,
+      r:Math.random()*1.6+0.4,
+      alpha:Math.random()*0.7+0.2,
+      col,
+      twinkle:Math.random()*Math.PI*2,
+      twinkleSpeed:0.01+Math.random()*0.03,
+      isStar:Math.random()>0.7
+    });
+  }
+}
+
+lw.addEventListener('mousemove',e=>{
+  const rect=lw.getBoundingClientRect();
+  mouse.x=e.clientX-rect.left;
+  mouse.y=e.clientY-rect.top;
+});
+lw.addEventListener('mouseleave',()=>{mouse.x=null;mouse.y=null;});
+
+function drawStar(x,y,r,col,alpha){
+  ctx.save();
+  ctx.globalAlpha=alpha;
+  ctx.fillStyle=col+'1)';
+  ctx.translate(x,y);
+  ctx.beginPath();
+  for(let i=0;i<5;i++){
+    const a=Math.PI/2+i*2*Math.PI/5;
+    const a2=a+Math.PI/5;
+    i===0?ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r):ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);
+    ctx.lineTo(Math.cos(a2)*r*0.4,Math.sin(a2)*r*0.4);
+  }
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+function animate(){
+  ctx.clearRect(0,0,W,H);
+
+  // subtle aurora pulses
+  const t=Date.now()*0.0005;
+  const gx=W*0.5+Math.sin(t)*W*0.15;
+  const gy=H*0.5+Math.cos(t*0.7)*H*0.1;
+  const grad=ctx.createRadialGradient(gx,gy,0,gx,gy,Math.min(W,H)*0.6);
+  grad.addColorStop(0,'rgba(0,100,40,0.06)');
+  grad.addColorStop(0.5,'rgba(206,17,38,0.025)');
+  grad.addColorStop(1,'transparent');
+  ctx.fillStyle=grad;
+  ctx.fillRect(0,0,W,H);
+
+  for(let s of stars){
+    s.twinkle+=s.twinkleSpeed;
+    const glow=Math.sin(s.twinkle)*0.3+0.7;
+
+    if(mouse.x!==null){
+      const dx=mouse.x-s.x, dy=mouse.y-s.y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      const pullR=180;
+      if(dist<pullR){
+        const force=(1-dist/pullR)*1.8;
+        s.vx+=dx/dist*force;
+        s.vy+=dy/dist*force;
+      }
+      // gentle return to origin
+      s.vx+=(s.ox-s.x)*0.012;
+      s.vy+=(s.oy-s.y)*0.012;
+    } else {
+      s.vx+=(s.ox-s.x)*0.02;
+      s.vy+=(s.oy-s.y)*0.02;
+    }
+    s.vx*=0.88; s.vy*=0.88;
+    s.x+=s.vx; s.y+=s.vy;
+
+    const a=s.alpha*glow;
+    if(s.isStar){
+      drawStar(s.x,s.y,s.r*2.2,s.col,a*0.9);
+    } else {
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=s.col+a+')';
+      ctx.fill();
+    }
+
+    // trails when moving fast
+    const speed=Math.sqrt(s.vx*s.vx+s.vy*s.vy);
+    if(speed>1.5){
+      ctx.beginPath();
+      ctx.moveTo(s.x,s.y);
+      ctx.lineTo(s.x-s.vx*4,s.y-s.vy*4);
+      ctx.strokeStyle=s.col+(a*0.4)+')';
+      ctx.lineWidth=s.r*0.8;
+      ctx.stroke();
+    }
+  }
+
+  // connection lines between nearby stars (gold shimmer)
+  for(let i=0;i<stars.length;i+=2){
+    for(let j=i+1;j<stars.length;j+=2){
+      const dx=stars[i].x-stars[j].x,dy=stars[i].y-stars[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<90){
+        const a=(1-d/90)*0.15;
+        ctx.beginPath();
+        ctx.moveTo(stars[i].x,stars[i].y);
+        ctx.lineTo(stars[j].x,stars[j].y);
+        ctx.strokeStyle='rgba(252,209,22,'+a+')';
+        ctx.lineWidth=0.5;
+        ctx.stroke();
+      }
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+window.addEventListener('resize',resize);
+resize();
+animate();
+
+// UI logic
+window.setRole=function(btn){
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+};
+window.doLogin=function(){
+  const u=document.getElementById('usr').value.trim();
+  const p=document.getElementById('pwd').value;
+  const msg=document.getElementById('msg');
+  if(!u||!p){
+    msg.style.color='rgba(255,100,80,0.9)';
+    msg.textContent='Veuillez remplir tous les champs.';
+    return;
+  }
+  msg.style.color='rgba(0,200,80,0.7)';
+  msg.textContent='Connexion en cours…';
+  setTimeout(()=>{
+    msg.style.color='rgba(252,209,22,0.9)';
+    msg.textContent='★  Bienvenue, '+u+' !  ★';
+  },900);
+};
+})();
+</script>
